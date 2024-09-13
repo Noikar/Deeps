@@ -31,6 +31,7 @@ Shift clicking the background will allow you to reposition the window.
 ## Known issues
 - Settings may not save under certain conditions. To remedy this, change your settings and then `/unload deeps`, it should then save.
 - Additional effects contribute towards overall accuracy
+- The way crit percentage is displayed doesn't account for misses. Thus, your crit rate is going to look lower than it actually is.
 - Spikes damage, counters, reprisal procs do not count currently.
 - High jump displays as Avalanche and Jump displays as Gale axe
 - Report only shows top 4
