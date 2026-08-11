@@ -30,6 +30,7 @@ Deeps::Deeps(void)
     , m_PartyOnly(true)
     , m_TVMode(false)
     , m_GUIScale(1)
+    , m_VersionCheckEnabled(true)
 { }
 Deeps::~Deeps(void)
 { }
@@ -55,7 +56,7 @@ const char* Deeps::GetName(void) const
 
 double Deeps::GetVersion(void) const
 {
-    return 1.07f;
+    return 1.08f;
 }
 
 /**
@@ -112,6 +113,7 @@ bool Deeps::Initialize(IAshitaCore* core, ILogManager* log, uint32_t id)
  */
 void Deeps::Release(void)
 {
+    this->StopVersionCheck();
     this->Direct3DRelease();
 
 	while (m_Packets.size() > 0)
@@ -207,6 +209,18 @@ bool Deeps::HandleCommand(int32_t mode, const char* command, bool injected)
                 m_AshitaCore->GetChatManager()->Writef(0, false, "%s%s", Ashita::Chat::Header("Deeps").c_str(), Ashita::Chat::Message(m_CountSkillchains ? "Skillchain Damage Enabled" : "Skillchain Damage Disabled").c_str());
                 return true;
             }
+            else if (args[1] == "version")
+            {
+                m_AshitaCore->GetChatManager()->Writef(0, false, "%sVersion v%.2f - checking for updates...", Ashita::Chat::Header("Deeps").c_str(), this->GetVersion());
+                this->StartVersionCheck(true);
+                return true;
+            }
+            else if (args[1] == "versioncheck")
+            {
+                m_VersionCheckEnabled = !m_VersionCheckEnabled;
+                m_AshitaCore->GetChatManager()->Writef(0, false, "%s%s", Ashita::Chat::Header("Deeps").c_str(), Ashita::Chat::Message(m_VersionCheckEnabled ? "Update Check On Load Enabled" : "Update Check On Load Disabled").c_str());
+                return true;
+            }
         }
         std::stringstream out;
         out << Ashita::Chat::Header("Deeps");
@@ -241,6 +255,16 @@ bool Deeps::HandleCommand(int32_t mode, const char* command, bool injected)
         out << Ashita::Chat::Header("Deeps");
         out << Ashita::Chat::Color2(2, "/dps sc");
         out << Ashita::Chat::Message(" - Toggles skillchain contribution to player damage on or off");
+        m_AshitaCore->GetChatManager()->Write(0, false, out.str().c_str());
+        out = std::stringstream();
+        out << Ashita::Chat::Header("Deeps");
+        out << Ashita::Chat::Color2(2, "/dps version");
+        out << Ashita::Chat::Message(" - Show the installed version and check GitHub for a newer one.");
+        m_AshitaCore->GetChatManager()->Write(0, false, out.str().c_str());
+        out = std::stringstream();
+        out << Ashita::Chat::Header("Deeps");
+        out << Ashita::Chat::Color2(2, "/dps versioncheck");
+        out << Ashita::Chat::Message(" - Toggle the automatic update check that runs shortly after loading.");
         m_AshitaCore->GetChatManager()->Write(0, false, out.str().c_str());
         return true;
     }

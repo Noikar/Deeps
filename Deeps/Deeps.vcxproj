@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClCompile Include="damage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="version.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Exports.def" />

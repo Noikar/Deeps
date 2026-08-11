@@ -61,6 +61,11 @@ The resulting `Deeps.dll` is written to `release\plugins\`.
 
 ## Patch Notes
 
+### v1.08
+- Added an update check. A few seconds after the plugin loads it asks GitHub for the latest release and, only if a newer one exists, prints a one-line notice in chat. It runs on a background thread, so it never stalls the game, and it stays quiet if it is up to date or cannot reach GitHub.
+- Added `/dps version` to show the installed version and check for updates on demand. Unlike the automatic check, this one always reports its result.
+- Added `/dps versioncheck` to turn the automatic check off if you would rather not have the plugin talk to GitHub.
+
 ### v1.07
 - Added the `expDestroyPlugin` export required by Ashita interface 4.30, which was causing the plugin to fail to load. Thanks to @troyBORG for the original fix ([relliko/Deeps#12](https://github.com/relliko/Deeps/pull/12)).
 - Recompiled against the Ashita 4.30 SDK.

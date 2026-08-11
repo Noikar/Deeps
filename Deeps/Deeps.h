@@ -28,13 +28,39 @@
 // Resolved via the AshitaSDK include directory; see Deeps.vcxproj.
 #include <Ashita.h>
 #include <algorithm>
+#include <atomic>
 #include <functional>
 #include <list>
 #include <map>
+#include <memory>
 #include <stdint.h>
+#include <string>
 #include <thread>
 #include <windowsx.h>
 #include "Defines.h"
+
+/**
+ * @brief State shared between the plugin and its version check worker.
+ *
+ * @note    Held by shared_ptr so the worker never reaches back into the plugin
+ *          object. 'latest' is written before 'done' is set and read after it,
+ *          which is all the ordering the two threads need.
+ */
+struct versioncheck_t
+{
+    std::atomic<bool> cancelled;    // The plugin is unloading; the worker should bail out.
+    std::atomic<bool> done;         // The worker finished; 'latest' may be read.
+    bool              verbose;      // User-requested check; report even when already current.
+    bool              consumed;     // Main thread has already reported this result.
+    std::string       latest;       // Release tag from GitHub, empty if the check failed.
+
+    versioncheck_t(void)
+        : cancelled(false)
+        , done(false)
+        , verbose(false)
+        , consumed(false)
+    { }
+};
 
 /**
  * @brief Our Main Plugin Class
@@ -58,6 +84,11 @@ class Deeps : IPlugin
     bool                  m_TVMode;
     float                 m_GUIScale;
     bool                  m_CountSkillchains;
+    bool                  m_VersionCheckEnabled;
+
+    // Version Check
+    std::shared_ptr<versioncheck_t> m_VersionCheck;
+    std::thread                     m_VersionThread;
 
     // Packet Deduplication reference
 	std::list<void*>	  m_Packets;
@@ -86,6 +117,11 @@ private:
 
     //main.cpp
     void Report(char mode, int max);
+
+    //version.cpp
+    void StartVersionCheck(bool verbose);
+    void StopVersionCheck(void);
+    void FlushVersionCheck(void);
 
     //render.cpp
     void Direct3DRelease(void);
