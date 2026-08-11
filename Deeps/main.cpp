@@ -55,7 +55,7 @@ const char* Deeps::GetName(void) const
 
 double Deeps::GetVersion(void) const
 {
-    return 1.06f;
+    return 1.07f;
 }
 
 /**
@@ -291,4 +291,14 @@ __declspec(dllexport) double __stdcall expGetInterfaceVersion(void)
 __declspec(dllexport) IPlugin* __stdcall expCreatePlugin(const char* args)
 {
     return (IPlugin*)new Deeps();
+}
+
+/**
+ * @brief Destroys an instance of this plugin object.
+ *
+ * @note This is a required export for Ashita interface 4.30.
+ */
+__declspec(dllexport) void __stdcall expDestroyPlugin(IPlugin* instance)
+{
+    delete instance;
 }

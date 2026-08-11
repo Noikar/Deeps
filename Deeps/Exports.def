@@ -2,3 +2,4 @@ LIBRARY "Deeps"
 EXPORTS
     expGetInterfaceVersion
     expCreatePlugin
+    expDestroyPlugin

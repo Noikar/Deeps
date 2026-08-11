@@ -25,8 +25,8 @@
 /**
  * @brief Required includes for an extension.
  */
-// #include "C:\code\Ashita-v4beta\plugins\sdk\Ashita.h"
-#include "D:\HorizonXI\Game\plugins\sdk\Ashita.h"
+// Resolved via the AshitaSDK include directory; see Deeps.vcxproj.
+#include <Ashita.h>
 #include <algorithm>
 #include <functional>
 #include <list>
@@ -121,5 +121,6 @@ public:
  */
 __declspec(dllexport) double     __stdcall expGetInterfaceVersion(void);
 __declspec(dllexport) IPlugin*   __stdcall expCreatePlugin(const char* args);
+__declspec(dllexport) void       __stdcall expDestroyPlugin(IPlugin* instance);
 
 #endif // __ASHITA_Deeps_H_INCLUDED__
