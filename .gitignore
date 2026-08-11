@@ -222,3 +222,8 @@ _Pvt_Extensions
 
 /Ashita.exp
 /Ashita.lib
+
+# Claude Code local instructions
+/CLAUDE.md
+/CLAUDE.local.md
+/.claude/
